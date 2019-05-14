@@ -6,7 +6,11 @@
     "start": "node index.js",
     "start-watch": "nodemon index.js",
     "dev": "concurrently \"yarn run start-watch\" \"cd client && yarn start\"",
+<<<<<<< Updated upstream
     "test": "mocha"
+=======
+    "test": "mocha --exit"
+>>>>>>> Stashed changes
   },
   "author": "noor",
   "license": "ISC",
@@ -14,10 +18,8 @@
   "description": "",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "dotenv": "^6.1.0",
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
-    "mongoose": "^5.3.6"
+    "express": "^4.16.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -26,6 +28,10 @@
     "express": "^4.16.4",
     "mocha": "^6.1.4",
     "mongoose": "^5.5.3",
+<<<<<<< Updated upstream
+=======
+    "morgan": "^1.9.1",
+>>>>>>> Stashed changes
     "nodemon": "^1.18.11",
     "supertest": "^4.0.2"
   }
