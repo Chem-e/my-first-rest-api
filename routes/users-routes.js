@@ -2,10 +2,12 @@ const express = require("express");
 const usersRouter = express.Router();
 const mongoose = require("mongoose");
 const Users = require("../models/users-model");
+const Tweets = require("../models/tweets-model");
 
 usersRouter.get("/", (req, res, next) => {
     Users.find()
       .select("name email _id")
+      .populate('tweets', 'message')
       .exec()
       .then(docs => {
         const response = {
@@ -15,6 +17,7 @@ usersRouter.get("/", (req, res, next) => {
               name: doc.name,
               email: doc.email,
               _id: doc._id,
+              tweet:doc.tweets,
               request: {
                 type: "GET",
                 url: "http://localhost:5000/users/" + doc._id
@@ -25,7 +28,6 @@ usersRouter.get("/", (req, res, next) => {
         res.status(200).json(response);
       })
       .catch(err => {
-        console.log(err);
         res.status(500).json({
           error: err
         });
@@ -36,6 +38,7 @@ usersRouter.get("/", (req, res, next) => {
 usersRouter.get('/:userId', (req, res, next) => {
     const id=req.params.userId;
     Users.findById(id)
+    .populate('tweets', 'message')
     .exec()
     .then(doc => {
       console.log("From database", doc);
@@ -64,12 +67,8 @@ usersRouter.post('/', (req, res, next) => {
     const user = new Users({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        email: req.body.email
-        // tweets:[{
-        //     _id: new mongoose.Types.ObjectId(),
-        //     time : req.body.time,
-        //     message:req.body.message
-        // }]
+        email: req.body.email,
+        tweets:req.body.tweetsId
       });
       user
         .save()
@@ -81,6 +80,10 @@ usersRouter.post('/', (req, res, next) => {
                 name: result.name,
                 email: result.email,
                 _id: result._id,
+                tweets:{
+                    _id:result.tweets,
+                    url:"http://localhost:5000/tweets/"+result.tweets
+                },
                 request: {
                     type: 'GET',
                     url: "http://localhost:5000/users/" + result._id

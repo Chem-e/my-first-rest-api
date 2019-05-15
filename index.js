@@ -35,9 +35,6 @@ app.use((req,res,next)=>{
   next(error);
 })
 
-<<<<<<< Updated upstream
-module.exports = app
-=======
 app.use((error,req,res,next)=>{
   res.status(error.status||500);
   res.json({
@@ -48,4 +45,3 @@ app.use((error,req,res,next)=>{
 app.listen(port, () => {
 console.log(`Server running on port ${port}`)
 })
->>>>>>> Stashed changes

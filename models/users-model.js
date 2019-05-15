@@ -9,7 +9,11 @@ const usersSchema= new mongoose.Schema({
         type:'string',
         required:true
         },
-    // tweets : Array
+    tweets : { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'users', 
+        required: true 
+    }
 });
 
 module.exports = mongoose.model('users',usersSchema);
