@@ -11,7 +11,7 @@ const usersSchema= new mongoose.Schema({
         },
     tweets : { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'users', 
+        ref: 'tweets', 
         required: true 
     }
 });
