@@ -1,13 +1,12 @@
 const express = require("express");
 const usersRouter = express.Router();
 const mongoose = require("mongoose");
-const Users = require("../models/users-model");
-const Tweets = require("../models/tweets-model");
+const Users = require("../models/users");
+const Tweets = require("../models/tweets");
 
 usersRouter.get("/", (req, res, next) => {
     Users.find()
       .select("name email _id")
-      .populate('tweets', 'message')
       .exec()
       .then(docs => {
         const response = {
@@ -17,7 +16,6 @@ usersRouter.get("/", (req, res, next) => {
               name: doc.name,
               email: doc.email,
               _id: doc._id,
-              tweet:doc.tweets,
               request: {
                 type: "GET",
                 url: "http://localhost:5000/users/" + doc._id
@@ -100,30 +98,29 @@ usersRouter.post('/', (req, res, next) => {
 });
 
 usersRouter.post("/:userId", (req, res, next) => {
-    const id = req.params.userId;
-    const updateOps = {};
-    for (const ops of req.body) {
-      updateOps[ops.propName] = ops.value;
-    }
-    Users.update({ _id: id }, { $set: updateOps })
-      .exec()
-      .then(result => {
-        res.status(200).json({
-            message: 'User updated',
-            request: {
-                type: 'GET',
-                url: 'http://localhost:5000/user/' + id
-            }
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({
-          error: err
-        });
+  const id = req.params.userId;
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  Users.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+          message: 'user updated',
+          request: {
+              type: 'GET',
+              url: 'http://localhost:5000/users/' + id
+          }
       });
-  });
-  
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+});
 
   usersRouter.delete("/:userId", (req, res, next) => {
     const id = req.params.userId;
@@ -143,3 +140,5 @@ usersRouter.post("/:userId", (req, res, next) => {
   });
 
 module.exports = usersRouter;
+
+

@@ -1,4 +1,6 @@
 const mongoose=require('mongoose');
+
+
 const usersSchema= new mongoose.Schema({
     _id : mongoose.Schema.Types.ObjectId,
     name : {
@@ -9,11 +11,11 @@ const usersSchema= new mongoose.Schema({
         type:'string',
         required:true
         },
-    tweets : { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'tweets', 
-        required: true 
-    }
+    // tweets : { 
+    //     type: mongoose.Schema.Types.ObjectId, 
+    //     ref: 'Tweets', 
+    //     required: true 
+    // }
 });
 
 module.exports = mongoose.model('users',usersSchema);

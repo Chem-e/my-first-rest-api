@@ -5,13 +5,14 @@ let moment = require('moment');
 moment().format();
 let timeAndDate= moment().format('MMMM Do YYYY, h:mm:ss a');
 
-const Tweets = require("../models/tweets-model");
+const Tweets = require("../models/tweets");
 
 // Handle incoming GET requests to /tweets
 tweetsRouter.get("/", (req, res, next) => {
   Tweets
     .find()
     .select("message date _id")
+    .populate('user', 'name')
     .exec()
     .then(docs => {
       res.status(200).json({
@@ -49,7 +50,8 @@ tweetsRouter.post("/", (req, res, next) => {
         createdTweet: {
             _id: result._id,
             date: result.date,
-            message: result.message
+            message: result.message,
+            user:req.body.usersId
         },
         request: {
           type: "GET",
@@ -84,6 +86,31 @@ tweetsRouter.get("/:tweetId", (req, res, next) => {
       });
     })
     .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+});
+
+tweetsRouter.post("/:tweetId", (req, res, next) => {
+  const id = req.params.tweetId;
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  Tweets.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+          message: 'tweet updated',
+          request: {
+              type: 'GET',
+              url: 'http://localhost:5000/tweet/' + id
+          }
+      });
+    })
+    .catch(err => {
+      console.log(err);
       res.status(500).json({
         error: err
       });

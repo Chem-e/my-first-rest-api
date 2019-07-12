@@ -4,8 +4,8 @@ const app = express();
 const mongoose= require ('mongoose');
 const path = require('path');
 const morgan = require ('morgan'); 
-const usersRoute = require('./routes/users-routes');
-const tweetsRoute = require('./routes/tweets-routes');
+const usersRoute = require('./routes/users');
+const tweetsRoute = require('./routes/tweets');
 require('dotenv').config();
 
 mongoose.connect('mongodb+srv://node-for-first-time:'+process.env.MONGO_ATLAS_PW+'@mongo-zvi6i.mongodb.net/test?retryWrites=true',
